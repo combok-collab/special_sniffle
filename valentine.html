@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Valentine Reveal</title>
+  <style>
+    body {
+      background: #fff0f5;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      color: #333;
+    }
+    h1 { color: #cc0066; }
+    .checker-box {
+      margin: 40px auto;
+      padding: 20px;
+      border: 3px solid #cc0066;
+      width: 60%;
+      background: #ffe6f0;
+    }
+    input {
+      padding: 8px;
+      margin: 5px;
+      width: 80%;
+    }
+    button {
+      padding: 8px 16px;
+      background: #cc0066;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>💌 Final Valentine Challenge</h1>
+  <p>Enter all three flags you’ve collected to unlock the special message.</p>
+  
+  <div class="checker-box">
+    <form onsubmit="checkFlags(); return false;">
+      <input type="text" id="flag1" placeholder="Enter Flag 1"><br>
+      <input type="text" id="flag2" placeholder="Enter Flag 2"><br>
+      <input type="text" id="flag3" placeholder="Enter Flag 3"><br>
+      <button type="submit">Unlock</button>
+    </form>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function checkFlags() {
+      const f1 = document.getElementById("flag1").value.trim();
+      const f2 = document.getElementById("flag2").value.trim();
+      const f3 = document.getElementById("flag3").value.trim();
+
+      // Replace with your actual flags
+      const correct1 = "VALENTINE{love_in_plaintext}";
+      const correct2 = "VALENTINE{crypto_love_unlocked}";
+      const correct3 = "VALENTINE{heart_unlocked}";
+
+      if (f1 === correct1 && f2 === correct2 && f3 === correct3) {
+        document.getElementById("result").innerHTML = 
+          "<h2>❤️ Congratulations! ❤️</h2><p>You’ve unlocked the final Valentine message:</p><h3>💖 You are my ultimate flag 💖</h3><p>Love, laughter, and puzzles forever.</p>";
+      } else {
+        document.getElementById("result").innerHTML = 
+          "❌ Incorrect flags. Double-check and try again!";
+      }
+    }
+  </script>
+</body>
+</html>
