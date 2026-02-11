@@ -44,6 +44,26 @@
   <div class="challenge-box">
     <p>Your first challenge: Explore this page carefully. Sometimes love is hidden in plain sight…</p>
   </div>
+  <div class="challenge-box">
+  <p>Enter the flag you discovered:</p>
+  <input type="text" id="flagInput" placeholder="Enter flag here">
+  <button onclick="checkFlag()">Submit</button>
+  <p id="result"></p>
+</div>
+
+<script>
+  function checkFlag() {
+    const flag = document.getElementById("flagInput").value.trim();
+    if (flag === "VALENTINE{love_in_plaintext}") {
+      document.getElementById("result").innerHTML = 
+        "✅ Correct! Proceed to the next challenge.<br>" +
+        '<a href="crypto.html" class="next-link">💌 Next Challenge: Crypto Puzzle</a>';
+    } else {
+      document.getElementById("result").innerHTML = "❌ Try again!";
+    }
+  }
+</script>
+
 
   <!-- FLAG: VALENTINE{love_in_plaintext} -->
   <p><a href="crypto.html">Next Challenge: Crypto Puzzle</a></p>
