@@ -65,8 +65,8 @@
 <script>
   function checkFlag() {
     const flag = document.getElementById("flagInput").value.trim();
-    if (flag === "VALENTINE{decoded_message}") {
-      document.getElementById("result").innerHTML = 
+    if (flag === "VALENTINE{you_accepted}") {
+      document.getElementById("result").innerHTML =
         "✅ Correct! Proceed to the next challenge.<br>" +
         '<a href="login.html" class="next-link">🔐 Next Challenge: Login Puzzle</a>';
     } else {
@@ -74,6 +74,7 @@
     }
   }
 </script>
+
 
   <!-- FLAG: VALENTINE{crypto_love_unlocked} -->
   <p><a href="login.html">Next Challenge: Login Puzzle</a></p>
