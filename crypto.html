@@ -62,18 +62,7 @@
   <p id="result"></p>
 </div>
 
-<script>
-  function checkFlag() {
-    const flag = document.getElementById("flagInput").value.trim();
-    if (flag === "VALENTINE{you_accepted}") {
-      document.getElementById("result").innerHTML =
-        "✅ Correct! Proceed to the next challenge.<br>" +
-        '<a href="login.html" class="next-link">🔐 Next Challenge: Login Puzzle</a>';
-    } else {
-      document.getElementById("result").innerHTML = "❌ Try again!";
-    }
-  }
-</script>
+<script> // Obfuscated flag stored as base64 const scrambled = "VkFMRU5USU5Fe3lvdV9hY2NlcHRlZH0="; // Decode helper function decodeBase64(str) { return atob(str); } function checkFlag() { const flag = document.getElementById("flagInput").value.trim(); const decodedFlag = decodeBase64(scrambled); // becomes VALENTINE{you_accepted} if (flag === decodedFlag) { document.getElementById("result").innerHTML = "✅ Correct! Proceed to the next challenge.<br>" + '<a href="login.html" class="next-link">🔐 Next Challenge: Login Puzzle</a>'; } else { document.getElementById("result").innerHTML = "❌ Try again!"; } } </script>
 
 
   <!-- FLAG: VALENTINE{crypto_love_unlocked} -->
