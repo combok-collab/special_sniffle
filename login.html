@@ -64,11 +64,34 @@
     </form>
     <div id="result"></div>
   </div>
+<div class="challenge-box">
+  <p>Try the right password to reveal the flag.</p>
+</div>
+
+<div class="challenge-box">
+  <p>Enter the flag you discovered:</p>
+  <input type="text" id="flagInput" placeholder="Enter flag here">
+  <button onclick="checkFlag()">Submit</button>
+  <p id="result"></p>
+</div>
+
+<script>
+  function checkFlag() {
+    const flag = document.getElementById("flagInput").value.trim();
+    if (flag === "VALENTINE{password_success}") {
+      document.getElementById("result").innerHTML = 
+        "✅ Correct! Proceed to the next challenge.<br>" +
+        '<a href="image.html" class="next-link">🖼️ Next Challenge: Stego Puzzle</a>';
+    } else {
+      document.getElementById("result").innerHTML = "❌ Try again!";
+    }
+  }
+</script>
 
   <script>
     function checkPassword() {
       const input = document.getElementById("password").value.toLowerCase();
-      const validPasswords = ["rose", "ananas", "cole"];
+      const validPasswords = ["r0s3", "ananas", "cole"];
       if (validPasswords.includes(input)) {
         document.getElementById("result").innerHTML = 
           "✅ Correct! FLAG: VALENTINE{heart_unlocked}";
