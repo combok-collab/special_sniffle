@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -73,12 +74,12 @@
 
   <script>
     const correctHashes = {
-      flag1: "8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f",
-      flag2: "cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23",
-      flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df"
+      flag1: "8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f", // VALENTINE{love_in_plaintext}
+      flag2: "cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23", // VALENTINE{you_accepted}
+      flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df"  // VALENTINE{password_success}
     };
 
-    // Fourth flag variants
+    // Stego flag variants (flag4) with their hashes
     const stegoCustomizations = {
       "4884c962b37e9ac79b6766b3fb1d078df7c0a4f6e676b40fff0ab3b75512c00d": {
         message: "🌹 With all the forgetfulness I have been given, I still remember you.",
@@ -136,8 +137,6 @@
         typeWriter("💖 You are my ultimate flag 💖", "finalMessage");
 
         if (audioId) fadeInAudio(document.getElementById(audioId));
-
-        launchFloatingHearts("💖");
       } else {
         document.getElementById("result").innerHTML = 
           "❌ Incorrect flags. Double-check and try again!";
@@ -168,9 +167,6 @@
       }
     }
 
-    function launchFloatingHearts(symbol="💖") {
-      for (let i = 0; i < 15; i++) {
-        const span = document.createElement("span");
-        span.className = "floating";
-        span.style.left = Math.random() * 100 + "vw";
-        span.style.animationDuration = (5 + Math.random() * 5) + "s";
+    function fadeInAudio(audioElement) {
+      audioElement.volume = 0;
+      audioElement
