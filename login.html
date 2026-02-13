@@ -28,29 +28,26 @@
       border: none;
       cursor: pointer;
     }
-    #result {
+    #result, #flagResult {
       margin-top: 20px;
       font-weight: bold;
-      color: #006600;
     }
     .next-link {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 12px 24px;
-  background: linear-gradient(135deg, #ff6699, #cc0066);
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  border-radius: 25px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-}
-
-.next-link:hover {
-  background: linear-gradient(135deg, #cc0066, #99004d);
-  transform: scale(1.05);
-}
-
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #ff6699, #cc0066);
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 25px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+    .next-link:hover {
+      background: linear-gradient(135deg, #cc0066, #99004d);
+      transform: scale(1.05);
+    }
   </style>
 </head>
 <body>
@@ -64,34 +61,45 @@
     </form>
     <div id="result"></div>
   </div>
-<div class="challenge-box">
-  <p>Try the right password to reveal the flag.</p>
-</div>
 
-<div class="challenge-box">
-  <p>Enter the flag you discovered:</p>
-  <input type="text" id="flagInput" placeholder="Enter flag here">
-  <button onclick="checkFlag()">Submit</button>
-  <p id="result"></p>
-</div>
-
-<script>
-  function checkFlag() {
-    const flag = document.getElementById("flagInput").value.trim();
-    if (flag === "VALENTINE{password_success}") {
-      document.getElementById("result").innerHTML = 
-        "✅ Correct! Proceed to the next challenge.<br>" +
-        '<a href="image.html" class="next-link">🖼️ Next Challenge: Stego Puzzle</a>';
-    } else {
-      document.getElementById("result").innerHTML = "❌ Try again!";
-    }
-  }
-</script>
+  <div class="challenge-box">
+    <p>Enter the flag you discovered:</p>
+    <input type="text" id="flagInput" placeholder="Enter flag here">
+    <button onclick="checkFlag()">Submit</button>
+    <p id="flagResult"></p>
+  </div>
 
   <script>
+    // Double-encoded passwords (Base64 then ROT13)
+    // Original passwords: r0s3, ananas, cole
+    const scrambledPasswords = [
+      "pwMoZj==", // ROT13 of "cjBzMw==" (base64 of r0s3)
+      "nananf",   // ROT13 of "ananas"
+      "pbyr"      // ROT13 of "cole"
+    ];
+
+    function rot13(str) {
+      return str.replace(/[a-zA-Z]/g, function(c) {
+        return String.fromCharCode(
+          (c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26
+        );
+      });
+    }
+
+    function decodePassword(str) {
+      // First undo ROT13, then base64 decode if needed
+      const rotDecoded = rot13(str);
+      try {
+        return atob(rotDecoded); // works if it was base64
+      } catch {
+        return rotDecoded; // fallback if it was plain ROT13
+      }
+    }
+
     function checkPassword() {
       const input = document.getElementById("password").value.toLowerCase();
-      const validPasswords = ["r0s3", "ananas", "cole"];
+      const validPasswords = scrambledPasswords.map(p => decodePassword(p));
+
       if (validPasswords.includes(input)) {
         document.getElementById("result").innerHTML = 
           "✅ Correct! FLAG: VALENTINE{heart_unlocked}";
@@ -100,10 +108,17 @@
           "❌ Wrong password. Try again!";
       }
     }
+
+    function checkFlag() {
+      const flag = document.getElementById("flagInput").value.trim();
+      if (flag === "VALENTINE{password_success}") {
+        document.getElementById("flagResult").innerHTML = 
+          "✅ Correct! Proceed to the next challenge.<br>" +
+          '<a href="image.html" class="next-link">🖼️ Next Challenge: Stego Puzzle</a>';
+      } else {
+        document.getElementById("flagResult").innerHTML = "❌ Try again!";
+      }
+    }
   </script>
-  <p><a href="image.html">Next Challenge: Stego Puzzle</a></p>
-  <a href="image.html" class="next-link">🖼️ Next Challenge: Stego Puzzle</a>
-
-
 </body>
 </html>
