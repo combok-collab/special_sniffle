@@ -4,11 +4,18 @@
   <title>Valentine Reveal</title>
   <style>
     body {
-      background: #fff0f5;
+      background: linear-gradient(270deg, #ffdde1, #ee9ca7);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
       font-family: Arial, sans-serif;
       text-align: center;
       color: #333;
-      overflow: hidden; /* allow falling motifs */
+      overflow: hidden;
+    }
+    @keyframes gradientShift {
+      0% {background-position:0% 50%;}
+      50% {background-position:100% 50%;}
+      100% {background-position:0% 50%;}
     }
     h1 { color: #cc0066; }
     .checker-box {
@@ -17,6 +24,8 @@
       border: 3px solid #cc0066;
       width: 60%;
       background: #ffe6f0;
+      box-shadow: 0 0 20px #ff99cc;
+      border-radius: 12px;
     }
     input {
       padding: 8px;
@@ -64,6 +73,17 @@
       0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
       100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
     }
+    .floating {
+      position: fixed;
+      bottom: -50px;
+      font-size: 2em;
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-50px) rotate(360deg); opacity: 0; }
+    }
   </style>
 </head>
 <body>
@@ -81,7 +101,7 @@
     <div id="result"></div>
   </div>
 
-  <!-- Hidden audio elements for each stego path -->
+  <!-- Hidden audio elements -->
   <audio id="music_r0s3" loop>
     <source src="music/reverie.mp3" type="audio/mpeg">
   </audio>
@@ -93,15 +113,13 @@
   </audio>
 
   <script>
-    // Correct SHA-256 hashes of your four flags
     const correctHashes = {
-      flag1: "8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f", // VALENTINE{love_in_plaintext}
-      flag2: "cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23", // VALENTINE{you_accepted}
-      flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df", // VALENTINE{password_success}
-      flag4: "4884c962b37e9ac79b6766b3fb1d078df7c0a4f6e676b40fff0ab3b75512c00d"  // VALENTINE{stego_success}
+      flag1: "8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f",
+      flag2: "cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23",
+      flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df",
+      flag4: "4884c962b37e9ac79b6766b3fb1d078df7c0a4f6e676b40fff0ab3b75512c00d"
     };
 
-    // Use the actual stego flag hash for customization
     const stegoCustomizations = {
       "4884c962b37e9ac79b6766b3fb1d078df7c0a4f6e676b40fff0ab3b75512c00d": {
         message: "🌹 With all the forgetfulness I have been given, I still remember you.",
@@ -156,6 +174,9 @@
         if (audioId) {
           fadeInAudio(document.getElementById(audioId));
         }
+
+        // Launch floating hearts for extra romance
+        launchFloatingHearts("💖");
       } else {
         document.getElementById("result").innerHTML = 
           "❌ Incorrect flags. Double-check and try again!";
@@ -186,19 +207,9 @@
       }
     }
 
-    function fadeInAudio(audioElement) {
-      audioElement.volume = 0;
-      audioElement.play();
-      let vol = 0;
-      const fade = setInterval(() => {
-        if (vol < 1) {
-          vol += 0.05;
-          audioElement.volume = vol;
-        } else {
-          clearInterval(fade);
-        }
-      }, 200); // fade in over ~4 seconds
-    }
-  </script>
-</body>
-</html>
+    function launchFloatingHearts(symbol="💖") {
+      for (let i = 0; i < 15; i++) {
+        const span = document.createElement("span");
+        span.className = "floating";
+        span.style.left = Math.random() * 100 + "vw";
+        span.style.animationDuration = (5 + Math.random() * 5) + "s
