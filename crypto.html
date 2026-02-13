@@ -56,13 +56,40 @@
 </div>
 
 <div class="challenge-box">
+  <p>Decode the hidden message to find the flag.</p>
+</div>
+
+<div class="challenge-box">
   <p>Enter the flag you discovered:</p>
   <input type="text" id="flagInput" placeholder="Enter flag here">
   <button onclick="checkFlag()">Submit</button>
   <p id="result"></p>
 </div>
 
-<script> // Obfuscated flag stored as base64 const scrambled = "VkFMRU5USU5Fe3lvdV9hY2NlcHRlZH0="; // Decode helper function decodeBase64(str) { return atob(str); } function checkFlag() { const flag = document.getElementById("flagInput").value.trim(); const decodedFlag = decodeBase64(scrambled); // becomes VALENTINE{you_accepted} if (flag === decodedFlag) { document.getElementById("result").innerHTML = "✅ Correct! Proceed to the next challenge.<br>" + '<a href="login.html" class="next-link">🔐 Next Challenge: Login Puzzle</a>'; } else { document.getElementById("result").innerHTML = "❌ Try again!"; } } </script>
+<script>
+  // Obfuscated flag stored as base64
+  const scrambled = "VkFMRU5USU5Fe3lvdV9hY2NlcHRlZH0=";
+
+  // Decode helper
+  function decodeBase64(str) {
+    return atob(str);
+  }
+
+  function checkFlag() {
+    const flag = document.getElementById("flagInput").value.trim();
+    const decodedFlag = decodeBase64(scrambled); // becomes VALENTINE{you_accepted}
+
+    if (flag === decodedFlag) {
+      document.getElementById("result").innerHTML =
+        "✅ Correct! Proceed to the next challenge.<br>" +
+        '<a href="login.html" class="next-link">🔐 Next Challenge: Login Puzzle</a>';
+    } else {
+      document.getElementById("result").innerHTML = "❌ Try again!";
+    }
+  }
+</script>
+
+
 
 
   <!-- FLAG: VALENTINE{crypto_love_unlocked} -->
