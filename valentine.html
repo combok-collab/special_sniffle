@@ -27,11 +27,7 @@
       box-shadow: 0 0 20px #ff99cc;
       border-radius: 12px;
     }
-    input {
-      padding: 8px;
-      margin: 5px;
-      width: 80%;
-    }
+    input { padding: 8px; margin: 5px; width: 80%; }
     button {
       padding: 8px 16px;
       background: #cc0066;
@@ -39,51 +35,20 @@
       border: none;
       cursor: pointer;
     }
-    #result {
-      margin-top: 20px;
-      font-weight: bold;
-    }
+    #result { margin-top: 20px; font-weight: bold; }
     .romantic {
       font-size: 1.2em;
       color: #cc0066;
       margin-top: 20px;
       animation: fadeIn 3s ease-in-out;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    .heart {
-      font-size: 2em;
-      color: red;
-      animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.2); }
-      100% { transform: scale(1); }
-    }
-    .falling {
-      position: fixed;
-      top: -50px;
-      font-size: 2em;
-      animation: fall linear infinite;
-    }
-    @keyframes fall {
-      0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-    }
-    .floating {
-      position: fixed;
-      bottom: -50px;
-      font-size: 2em;
-      animation: floatUp linear infinite;
-    }
-    @keyframes floatUp {
-      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-      50% { opacity: 1; }
-      100% { transform: translateY(-50px) rotate(360deg); opacity: 0; }
-    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .heart { font-size: 2em; color: red; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { transform: scale(1);} 50% { transform: scale(1.2);} 100% { transform: scale(1);} }
+    .falling { position: fixed; top: -50px; font-size: 2em; animation: fall linear infinite; }
+    @keyframes fall { 0% { transform: translateY(-50px) rotate(0deg); opacity: 1;} 100% { transform: translateY(100vh) rotate(360deg); opacity: 0;} }
+    .floating { position: fixed; bottom: -50px; font-size: 2em; animation: floatUp linear infinite; }
+    @keyframes floatUp { 0% { transform: translateY(100vh) rotate(0deg); opacity: 0;} 50% { opacity: 1;} 100% { transform: translateY(-50px) rotate(360deg); opacity: 0;} }
   </style>
 </head>
 <body>
@@ -102,23 +67,16 @@
   </div>
 
   <!-- Hidden audio elements -->
-  <audio id="music_r0s3" loop>
-    <source src="music/reverie.mp3" type="audio/mpeg">
-  </audio>
-  <audio id="music_ananas" loop>
-    <source src="music/daydreams.mp3" type="audio/mpeg">
-  </audio>
-  <audio id="music_cole" loop>
-    <source src="music/love_spell.mp3" type="audio/mpeg">
-  </audio>
+  <audio id="music_r0s3" loop><source src="music/reverie.mp3" type="audio/mpeg"></audio>
+  <audio id="music_ananas" loop><source src="music/daydreams.mp3" type="audio/mpeg"></audio>
+  <audio id="music_cole" loop><source src="music/love_spell.mp3" type="audio/mpeg"></audio>
 
   <script>
-    // Correct hashes for your four base flags
     const correctHashes = {
       flag1: "8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f", // VALENTINE{love_in_plaintext}
       flag2: "cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23", // VALENTINE{you_accepted}
-      flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df", // VALENTINE{password_success}
-      // For stego, you can accept multiple variants
+      flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df"  // VALENTINE{password_success}
+      // flag4 is handled via stegoCustomizations
     };
 
     // Multiple stego flag hashes mapped to customizations
@@ -163,17 +121,12 @@
           h2 === correctHashes.flag2 &&
           h3 === correctHashes.flag3 &&
           stegoCustomizations[h4]) {
-        
-        let romanticMessage = "💖 You are my ultimate flag 💖";
-        let motif = "❤️";
-        let audioId = null;
 
-        if (stegoCustomizations[h4]) {
-          romanticMessage = stegoCustomizations[h4].message;
-          motif = stegoCustomizations[h4].motif;
-          audioId = stegoCustomizations[h4].audioId;
-          launchFallingMotifs(motif);
-        }
+        let romanticMessage = stegoCustomizations[h4].message;
+        let motif = stegoCustomizations[h4].motif;
+        let audioId = stegoCustomizations[h4].audioId;
+
+        launchFallingMotifs(motif);
 
         document.getElementById("result").innerHTML = 
           "<h2 class='heart'>❤️ Congratulations! ❤️</h2>" +
@@ -183,9 +136,7 @@
 
         typeWriter("💖 You are my ultimate flag 💖", "finalMessage");
 
-        if (audioId) {
-          fadeInAudio(document.getElementById(audioId));
-        }
+        if (audioId) fadeInAudio(document.getElementById(audioId));
 
         launchFloatingHearts("💖");
       } else {
@@ -209,4 +160,6 @@
     function launchFallingMotifs(symbol) {
       for (let i = 0; i < 20; i++) {
         const span = document.createElement("span");
-        span.class
+        span.className = "falling";
+        span.style.left = Math.random() * 100 + "vw";
+        span.style.animationDuration = (3 + Math.random() * 5
