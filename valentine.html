@@ -1,22 +1,14 @@
-
 <!DOCTYPE html>
 <html>
 <head>
   <title>Valentine Reveal</title>
   <style>
     body {
-      background: linear-gradient(270deg, #ffdde1, #ee9ca7);
-      background-size: 400% 400%;
-      animation: gradientShift 15s ease infinite;
+      background: #fff0f5;
       font-family: Arial, sans-serif;
       text-align: center;
       color: #333;
-      overflow: hidden;
-    }
-    @keyframes gradientShift {
-      0% {background-position:0% 50%;}
-      50% {background-position:100% 50%;}
-      100% {background-position:0% 50%;}
+      overflow: hidden; /* allow falling motifs */
     }
     h1 { color: #cc0066; }
     .checker-box {
@@ -25,10 +17,12 @@
       border: 3px solid #cc0066;
       width: 60%;
       background: #ffe6f0;
-      box-shadow: 0 0 20px #ff99cc;
-      border-radius: 12px;
     }
-    input { padding: 8px; margin: 5px; width: 80%; }
+    input {
+      padding: 8px;
+      margin: 5px;
+      width: 80%;
+    }
     button {
       padding: 8px 16px;
       background: #cc0066;
@@ -36,20 +30,40 @@
       border: none;
       cursor: pointer;
     }
-    #result { margin-top: 20px; font-weight: bold; }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
     .romantic {
       font-size: 1.2em;
       color: #cc0066;
       margin-top: 20px;
       animation: fadeIn 3s ease-in-out;
     }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .heart { font-size: 2em; color: red; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0% { transform: scale(1);} 50% { transform: scale(1.2);} 100% { transform: scale(1);} }
-    .falling { position: fixed; top: -50px; font-size: 2em; animation: fall linear infinite; }
-    @keyframes fall { 0% { transform: translateY(-50px) rotate(0deg); opacity: 1;} 100% { transform: translateY(100vh) rotate(360deg); opacity: 0;} }
-    .floating { position: fixed; bottom: -50px; font-size: 2em; animation: floatUp linear infinite; }
-    @keyframes floatUp { 0% { transform: translateY(100vh) rotate(0deg); opacity: 0;} 50% { opacity: 1;} 100% { transform: translateY(-50px) rotate(360deg); opacity: 0;} }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .heart {
+      font-size: 2em;
+      color: red;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .falling {
+      position: fixed;
+      top: -50px;
+      font-size: 2em;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
   </style>
 </head>
 <body>
@@ -67,34 +81,32 @@
     <div id="result"></div>
   </div>
 
-  <!-- Hidden audio elements -->
-  <audio id="music_r0s3" loop><source src="music/reverie.mp3" type="audio/mpeg"></audio>
-  <audio id="music_ananas" loop><source src="music/daydreams.mp3" type="audio/mpeg"></audio>
-  <audio id="music_cole" loop><source src="music/love_spell.mp3" type="audio/mpeg"></audio>
+  <!-- Hidden audio elements for each stego path -->
+  <audio id="music_r0s3" loop>
+    <source src="music/reverie.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="music_ananas" loop>
+    <source src="music/daydreams.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="music_cole" loop>
+    <source src="music/love_spell.mp3" type="audio/mpeg">
+  </audio>
 
   <script>
+    // Correct SHA-256 hashes of your four flags
     const correctHashes = {
       flag1: "8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f", // VALENTINE{love_in_plaintext}
       flag2: "cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23", // VALENTINE{you_accepted}
-      flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df"  // VALENTINE{password_success}
+      flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df", // VALENTINE{password_success}
+      flag4: "4884c962b37e9ac79b6766b3fb1d078df7c0a4f6e676b40fff0ab3b75512c00d"  // VALENTINE{stego_success}
     };
 
-    // Stego flag variants (flag4) with their hashes
+    // Use the actual stego flag hash for customization
     const stegoCustomizations = {
       "4884c962b37e9ac79b6766b3fb1d078df7c0a4f6e676b40fff0ab3b75512c00d": {
         message: "🌹 With all the forgetfulness I have been given, I still remember you.",
         motif: "🌹",
         audioId: "music_r0s3"
-      },
-      "06a4b0444ae1e6183e2e344f1dd1159373f6f2168213fe4d729b98d2079a17cc": {
-        message: "🍍 I threw all my dictionaries into the fire and named you my language.",
-        motif: "🍍",
-        audioId: "music_ananas"
-      },
-      "f78b6cb9224209fe21027f4f6addf57ef2fdf4392e9362095ea8de7377f5451e": {
-        message: "🌿 Even if the night sky were filled with stars, I'd rather see them through the reflection of your eyes.",
-        motif: "🌿",
-        audioId: "music_cole"
       }
     };
 
@@ -120,13 +132,18 @@
       if (h1 === correctHashes.flag1 &&
           h2 === correctHashes.flag2 &&
           h3 === correctHashes.flag3 &&
-          stegoCustomizations[h4]) {
+          h4 === correctHashes.flag4) {
+        
+        let romanticMessage = "💖 You are my ultimate flag 💖";
+        let motif = "❤️";
+        let audioId = null;
 
-        let romanticMessage = stegoCustomizations[h4].message;
-        let motif = stegoCustomizations[h4].motif;
-        let audioId = stegoCustomizations[h4].audioId;
-
-        launchFallingMotifs(motif);
+        if (stegoCustomizations[h4]) {
+          romanticMessage = stegoCustomizations[h4].message;
+          motif = stegoCustomizations[h4].motif;
+          audioId = stegoCustomizations[h4].audioId;
+          launchFallingMotifs(motif);
+        }
 
         document.getElementById("result").innerHTML = 
           "<h2 class='heart'>❤️ Congratulations! ❤️</h2>" +
@@ -136,7 +153,9 @@
 
         typeWriter("💖 You are my ultimate flag 💖", "finalMessage");
 
-        if (audioId) fadeInAudio(document.getElementById(audioId));
+        if (audioId) {
+          fadeInAudio(document.getElementById(audioId));
+        }
       } else {
         document.getElementById("result").innerHTML = 
           "❌ Incorrect flags. Double-check and try again!";
@@ -169,4 +188,17 @@
 
     function fadeInAudio(audioElement) {
       audioElement.volume = 0;
-      audioElement
+      audioElement.play();
+      let vol = 0;
+      const fade = setInterval(() => {
+        if (vol < 1) {
+          vol += 0.05;
+          audioElement.volume = vol;
+        } else {
+          clearInterval(fade);
+        }
+      }, 200); // fade in over ~4 seconds
+    }
+  </script>
+</body>
+</html>
