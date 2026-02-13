@@ -62,50 +62,41 @@
     <div id="result"></div>
   </div>
 
-  <div class="challenge-box">
-    <p>Enter the flag you discovered:</p>
-    <input type="text" id="flagInput" placeholder="Enter flag here">
-    <button onclick="checkFlag()">Submit</button>
-    <p id="flagResult"></p>
-  </div>
-
   <script>
-    // Double-encoded passwords (Base64 then ROT13)
-    // Original passwords: r0s3, ananas, cole
-    const scrambledPasswords = [
-      "pwMoZj==", // ROT13 of "cjBzMw==" (base64 of r0s3)
-      "nananf",   // ROT13 of "ananas"
-      "pbyr"      // ROT13 of "cole"
+    // Only opaque SHA-256 hashes, no plaintext hints
+    const storedHashes = [
+      "6534c38a225caa5284a2217f797a3ed14236d62a3778c7d3d4707bdd441d9c89", 
+      "06a4b0444ae1e6183e2e344f1dd1159373f6f2168213fe4d729b98d2079a17cc", 
+      "f78b6cb9224209fe21027f4f6addf57ef2fdf4392e9362095ea8de7377f5451e"
     ];
 
-    function rot13(str) {
-      return str.replace(/[a-zA-Z]/g, function(c) {
-        return String.fromCharCode(
-          (c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26
-        );
-      });
+    async function sha256(str) {
+      const buf = new TextEncoder().encode(str);
+      const hashBuf = await crypto.subtle.digest("SHA-256", buf);
+      return Array.from(new Uint8Array(hashBuf))
+        .map(b => b.toString(16).padStart(2, "0"))
+        .join("");
     }
 
-    function decodePassword(str) {
-      // First undo ROT13, then base64 decode if needed
-      const rotDecoded = rot13(str);
-      try {
-        return atob(rotDecoded); // works if it was base64
-      } catch {
-        return rotDecoded; // fallback if it was plain ROT13
-      }
-    }
-
-    function checkPassword() {
+    async function checkPassword() {
       const input = document.getElementById("password").value.toLowerCase();
-      const validPasswords = scrambledPasswords.map(p => decodePassword(p));
+      const inputHash = await sha256(input);
 
-      if (validPasswords.includes(input)) {
+      if (storedHashes.includes(inputHash)) {
         document.getElementById("result").innerHTML = 
-          "✅ Correct! FLAG: VALENTINE{heart_unlocked}";
+          "✅ Correct! FLAG: VALENTINE{password_success}<br>" +
+          "Now submit this flag below to proceed.";
+
+        // Show flag submission dynamically
+        document.getElementById("result").innerHTML +=
+          '<div class="challenge-box">' +
+          '<p>Enter the flag you discovered:</p>' +
+          '<input type="text" id="flagInput" placeholder="Enter flag here">' +
+          '<button onclick="checkFlag()">Submit</button>' +
+          '<p id="flagResult"></p>' +
+          '</div>';
       } else {
-        document.getElementById("result").innerHTML = 
-          "❌ Wrong password. Try again!";
+        document.getElementById("result").innerHTML = "❌ Wrong password. Try again!";
       }
     }
 
