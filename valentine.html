@@ -8,6 +8,7 @@
       font-family: Arial, sans-serif;
       text-align: center;
       color: #333;
+      overflow: hidden; /* allow falling motifs */
     }
     h1 { color: #cc0066; }
     .checker-box {
@@ -33,6 +34,36 @@
       margin-top: 20px;
       font-weight: bold;
     }
+    .romantic {
+      font-size: 1.2em;
+      color: #cc0066;
+      margin-top: 20px;
+      animation: fadeIn 3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .heart {
+      font-size: 2em;
+      color: red;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .falling {
+      position: fixed;
+      top: -50px;
+      font-size: 2em;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
   </style>
 </head>
 <body>
@@ -50,13 +81,31 @@
     <div id="result"></div>
   </div>
 
+  <!-- Hidden audio elements for each stego path -->
+  <audio id="music_r0s3" loop>
+    <source src="music/reverie.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="music_ananas" loop>
+    <source src="music/daydreams.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="music_cole" loop>
+    <source src="music/love_spell.mp3" type="audio/mpeg">
+  </audio>
+
   <script>
-    // Replace these with actual SHA-256 hashes of your flags
+    // Replace with actual SHA-256 hashes of your flags
     const correctHashes = {
       flag1: "8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f",
       flag2: "cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23",
       flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df",
       flag4: "4884c962b37e9ac79b6766b3fb1d078df7c0a4f6e676b40fff0ab3b75512c00d"
+    };
+
+    // Map stego flag hashes to custom romantic messages, motifs, and audio IDs
+    const stegoCustomizations = {
+      "6534c38a225caa5284a2217f797a3ed14236d62a3778c7d3d4707bdd441d9c89": { message: "🌹 With all the forgetfullness I have been given, I still remember you.", motif: "🌹", audioId: "music_r0s3" },
+      "06a4b0444ae1e6183e2e344f1dd1159373f6f2168213fe4d729b98d2079a17cc": { message: "🍍 I threw all my dictionaries into the fire and named you my language.", motif: "🍍", audioId: "music_ananas" },
+      "f78b6cb9224209fe21027f4f6addf57ef2fdf4392e9362095ea8de7377f5451e": { message: "🌿 Even if the night sky were filled with stars, I'd rather see them through the reflection of your eyes.", motif: "🌿", audioId: "music_cole" }
     };
 
     async function sha256(str) {
@@ -82,12 +131,72 @@
           h2 === correctHashes.flag2 &&
           h3 === correctHashes.flag3 &&
           h4 === correctHashes.flag4) {
+        
+        let romanticMessage = "💖 You are my ultimate flag 💖";
+        let motif = "❤️";
+        let audioId = null;
+
+        if (stegoCustomizations[h4]) {
+          romanticMessage = stegoCustomizations[h4].message;
+          motif = stegoCustomizations[h4].motif;
+          audioId = stegoCustomizations[h4].audioId;
+          launchFallingMotifs(motif);
+        }
+
         document.getElementById("result").innerHTML = 
-          "<h2>❤️ Congratulations! ❤️</h2><p>You’ve unlocked the final Valentine message:</p><h3>💖 You are my ultimate flag 💖</h3><p>Love, laughter, and puzzles forever.</p>";
+          "<h2 class='heart'>❤️ Congratulations! ❤️</h2>" +
+          "<p>You’ve unlocked the final Valentine message:</p>" +
+          "<h3 id='finalMessage'></h3>" +
+          "<p class='romantic'>" + romanticMessage + "</p>";
+
+        typeWriter("💖 You are my ultimate flag 💖", "finalMessage");
+
+        // Play customized romantic track with fade-in
+        if (audioId) {
+          fadeInAudio(document.getElementById(audioId));
+        }
       } else {
         document.getElementById("result").innerHTML = 
           "❌ Incorrect flags. Double-check and try again!";
       }
+    }
+
+    function typeWriter(text, elementId, speed=75) {
+      let i = 0;
+      function typing() {
+        if (i < text.length) {
+          document.getElementById(elementId).innerHTML += text.charAt(i);
+          i++;
+          setTimeout(typing, speed);
+        }
+      }
+      typing();
+    }
+
+    function launchFallingMotifs(symbol) {
+      for (let i = 0; i < 20; i++) {
+        const span = document.createElement("span");
+        span.className = "falling";
+        span.style.left = Math.random() * 100 + "vw";
+        span.style.animationDuration = (3 + Math.random() * 5) + "s";
+        span.textContent = symbol;
+        document.body.appendChild(span);
+        setTimeout(() => span.remove(), 10000);
+      }
+    }
+
+    function fadeInAudio(audioElement) {
+      audioElement.volume = 0;
+      audioElement.play();
+      let vol = 0;
+      const fade = setInterval(() => {
+        if (vol < 1) {
+          vol += 0.05;
+          audioElement.volume = vol;
+        } else {
+          clearInterval(fade);
+        }
+      }, 200); // fade in over ~4 seconds
     }
   </script>
 </body>
