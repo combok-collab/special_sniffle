@@ -28,8 +28,9 @@
       border: none;
       cursor: pointer;
     }
-    #result {
+    #result, #flagResult {
       margin-top: 20px;
+      font-weight: bold;
     }
     img {
       margin-top: 20px;
@@ -37,23 +38,21 @@
       border: 3px solid #006699;
     }
     .next-link {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 12px 24px;
-  background: linear-gradient(135deg, #ff6699, #cc0066);
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  border-radius: 25px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-}
-
-.next-link:hover {
-  background: linear-gradient(135deg, #cc0066, #99004d);
-  transform: scale(1.05);
-}
-
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #ff6699, #cc0066);
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 25px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+    .next-link:hover {
+      background: linear-gradient(135deg, #cc0066, #99004d);
+      transform: scale(1.05);
+    }
   </style>
 </head>
 <body>
@@ -67,52 +66,53 @@
     </form>
     <div id="result"></div>
   </div>
-<div class="challenge-box">
-  <p>Extract the hidden data from the image to find the flag.</p>
-</div>
-
-<div class="challenge-box">
-  <p>Enter the flag you discovered:</p>
-  <input type="text" id="flagInput" placeholder="Enter flag here">
-  <button onclick="checkFlag()">Submit</button>
-  <p id="result"></p>
-</div>
-
-<script>
-  function checkFlag() {
-    const flag = document.getElementById("flagInput").value.trim();
-    if (flag === "VALENTINE{stego_success}") {
-      document.getElementById("result").innerHTML = 
-        "✅ Correct! Proceed to the final reveal.<br>" +
-        '<a href="valentine.html" class="next-link">❤️ Final Valentine Reveal</a>';
-    } else {
-      document.getElementById("result").innerHTML = "❌ Try again!";
-    }
-  }
-</script>
 
   <script>
-    function showImage() {
+    // Map of SHA-256 hashes to image paths
+    // Replace HASH_xxx with actual SHA-256 values for r0s3, ananas, cole
+    const passwordImageMap = {
+      "6534c38a225caa5284a2217f797a3ed14236d62a3778c7d3d4707bdd441d9c89": "Images/rose.jpeg",
+      "06a4b0444ae1e6183e2e344f1dd1159373f6f2168213fe4d729b98d2079a17cc": "Images/ananas.jpeg",
+      "f78b6cb9224209fe21027f4f6addf57ef2fdf4392e9362095ea8de7377f5451e": "Images/cole.jpeg"
+    };
+
+    async function sha256(str) {
+      const buf = new TextEncoder().encode(str);
+      const hashBuf = await crypto.subtle.digest("SHA-256", buf);
+      return Array.from(new Uint8Array(hashBuf))
+        .map(b => b.toString(16).padStart(2, "0"))
+        .join("");
+    }
+
+    async function showImage() {
       const input = document.getElementById("password").value.toLowerCase();
-      let imagePath = "";
-      if (input === "r0s3") {
-        imagePath = "Images/rose.jpeg"; // replace with your uploaded rose image filename
-      } else if (input === "ananas") {
-        imagePath = "Images/ananas.jpeg"; // replace with your uploaded ananas image filename
-      } else if (input === "cole") {
-        imagePath = "Images/cole.jpeg"; // replace with your uploaded cole image filename
+      const inputHash = await sha256(input);
+
+      if (passwordImageMap[inputHash]) {
+        const imagePath = passwordImageMap[inputHash];
+        document.getElementById("result").innerHTML = 
+          "✅ Correct! Here is your image:<br><img src='" + imagePath + "' alt='Challenge Image'><br><p>Now inspect this image carefully…</p>" +
+          '<div class="challenge-box">' +
+          '<p>Enter the flag you discovered:</p>' +
+          '<input type="text" id="flagInput" placeholder="Enter flag here">' +
+          '<button onclick="checkFlag()">Submit</button>' +
+          '<p id="flagResult"></p>' +
+          '</div>';
       } else {
         document.getElementById("result").innerHTML = "❌ Wrong password. Try again!";
-        return;
       }
-      document.getElementById("result").innerHTML = 
-        "✅ Correct! Here is your image:<br><img src='" + imagePath + "' alt='Challenge Image'><br><p>Now inspect this image carefully…</p>";
+    }
+
+    function checkFlag() {
+      const flag = document.getElementById("flagInput").value.trim();
+      if (flag === "VALENTINE{stego_success}") {
+        document.getElementById("flagResult").innerHTML = 
+          "✅ Correct! Proceed to the final reveal.<br>" +
+          '<a href="valentine.html" class="next-link">❤️ Final Valentine Reveal</a>';
+      } else {
+        document.getElementById("flagResult").innerHTML = "❌ Try again!";
+      }
     }
   </script>
-  <p>Once you’ve extracted your flag from the image, head to the final reveal:</p>
-<p><a href="valentine.html">Final Valentine Reveal</a></p>
-  <a href="valentine.html" class="next-link">❤️ Final Valentine Reveal</a>
-
-
 </body>
 </html>
