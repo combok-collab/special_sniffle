@@ -73,14 +73,14 @@
 
   <script>
     const correctHashes = {
-      flag1: "8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f", // VALENTINE{love_in_plaintext}
-      flag2: "cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23", // VALENTINE{you_accepted}
-      flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df"  // VALENTINE{password_success}
+      flag1: "8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f",
+      flag2: "cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23",
+      flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df"
     };
 
-    // Stego flag variants with their hashes
+    // Fourth flag variants
     const stegoCustomizations = {
-      "6534c38a225caa5284a2217f797a3ed14236d62a3778c7d3d4707bdd441d9c89": {
+      "4884c962b37e9ac79b6766b3fb1d078df7c0a4f6e676b40fff0ab3b75512c00d": {
         message: "🌹 With all the forgetfulness I have been given, I still remember you.",
         motif: "🌹",
         audioId: "music_r0s3"
@@ -170,4 +170,7 @@
 
     function launchFloatingHearts(symbol="💖") {
       for (let i = 0; i < 15; i++) {
-        const span = document.create
+        const span = document.createElement("span");
+        span.className = "floating";
+        span.style.left = Math.random() * 100 + "vw";
+        span.style.animationDuration = (5 + Math.random() * 5) + "s";
