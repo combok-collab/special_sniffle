@@ -71,105 +71,83 @@
   <audio id="music_ananas" loop><source src="music/daydreams.mp3" type="audio/mpeg"></audio>
   <audio id="music_cole" loop><source src="music/love_spell.mp3" type="audio/mpeg"></audio>
 
-  <script>
-    // Fixed hashes for the first three flags
-    const correctHashes = {
-      flag1: "8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f",
-      flag2: "cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23",
-      flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df"
-    };
+ <script>
+  const correctHashes = {
+    flag1: "8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f",
+    flag2: "cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23",
+    flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df",
+    flag4: "4884c962b37e9ac79b6766b3fb1d078df7c0a4f6e676b40fff0ab3b75512c00d" // VALENTINE{stego_success}
+  };
 
-    // Password hashes from image.html → customizations
-    const stegoCustomizations = {
-      "6534c38a225caa5284a2217f797a3ed14236d62a3778c7d3d4707bdd441d9c89": {
-        message: "🌹 With all the forgetfulness I have been given, I still remember you.",
-        motif: "🌹",
-        audioId: "music_r0s3"
-      },
-      "06a4b0444ae1e6183e2e344f1dd1159373f6f2168213fe4d729b98d2079a17cc": {
-        message: "🍍 I threw all my dictionaries into the fire and named you my language.",
-        motif: "🍍",
-        audioId: "music_ananas"
-      },
-      "f78b6cb9224209fe21027f4f6addf57ef2fdf4392e9362095ea8de7377f5451e": {
-        message: "🌿 Even if the night sky were filled with stars, I'd rather see them through the reflection of your eyes.",
-        motif: "🌿",
-        audioId: "music_cole"
-      }
-    };
-
-    async function sha256(str) {
-      const buf = new TextEncoder().encode(str);
-      const hashBuf = await crypto.subtle.digest("SHA-256", buf);
-      return Array.from(new Uint8Array(hashBuf))
-        .map(b => b.toString(16).padStart(2, "0"))
-        .join("");
+  // Customizations keyed to password hashes from image.html
+  const stegoCustomizations = {
+    "6534c38a225caa5284a2217f797a3ed14236d62a3778c7d3d4707bdd441d9c89": {
+      message: "🌹 With all the forgetfulness I have been given, I still remember you.",
+      motif: "🌹",
+      audioId: "music_r0s3"
+    },
+    "06a4b0444ae1e6183e2e344f1dd1159373f6f2168213fe4d729b98d2079a17cc": {
+      message: "🍍 I threw all my dictionaries into the fire and named you my language.",
+      motif: "🍍",
+      audioId: "music_ananas"
+    },
+    "f78b6cb9224209fe21027f4f6addf57ef2fdf4392e9362095ea8de7377f5451e": {
+      message: "🌿 Even if the night sky were filled with stars, I'd rather see them through the reflection of your eyes.",
+      motif: "🌿",
+      audioId: "music_cole"
     }
+  };
 
-    async function checkFlags() {
-      const f1 = document.getElementById("flag1").value.trim();
-      const f2 = document.getElementById("flag2").value.trim();
-      const f3 = document.getElementById("flag3").value.trim();
-      const f4 = document.getElementById("flag4").value.trim();
+  // Helper to read query string
+  function getQueryParam(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+  }
 
-      const h1 = await sha256(f1);
-      const h2 = await sha256(f2);
-      const h3 = await sha256(f3);
-      const h4 = await sha256(f4);
+  async function checkFlags() {
+    const f1 = document.getElementById("flag1").value.trim();
+    const f2 = document.getElementById("flag2").value.trim();
+    const f3 = document.getElementById("flag3").value.trim();
+    const f4 = document.getElementById("flag4").value.trim();
 
-      // Validate first three flags and that the stego flag is correct
-      if (h1 === correctHashes.flag1 &&
-          h2 === correctHashes.flag2 &&
-          h3 === correctHashes.flag3 &&
-          f4 === "VALENTINE{stego_success}") {
+    const h1 = await sha256(f1);
+    const h2 = await sha256(f2);
+    const h3 = await sha256(f3);
+    const h4 = await sha256(f4);
 
-        // Retrieve the image path hash from localStorage (set in image.html)
-        const pathHash = localStorage.getItem("stegoPathHash");
+    if (h1 === correctHashes.flag1 &&
+        h2 === correctHashes.flag2 &&
+        h3 === correctHashes.flag3 &&
+        h4 === correctHashes.flag4) {
 
-        let romanticMessage = "💖 You are my ultimate flag 💖";
-        let motif = "❤️";
-        let audioId = null;
+      // Get the path hash from the query string
+      const pathHash = getQueryParam("pathHash");
 
-        if (stegoCustomizations[pathHash]) {
-          romanticMessage = stegoCustomizations[pathHash].message;
-          motif = stegoCustomizations[pathHash].motif;
-          audioId = stegoCustomizations[pathHash].audioId;
-          launchFallingMotifs(motif);
-        }
+      let romanticMessage = "💖 You are my ultimate flag 💖";
+      let motif = "❤️";
+      let audioId = null;
 
-        document.getElementById("result").innerHTML = 
-          "<h2 class='heart'>❤️ Congratulations! ❤️</h2>" +
-          "<p>You’ve unlocked the final Valentine message:</p>" +
-          "<h3 id='finalMessage'></h3>" +
-          "<p class='romantic'>" + romanticMessage + "</p>";
-
-        typeWriter("💖 You are my ultimate flag 💖", "finalMessage");
-
-        if (audioId) fadeInAudio(document.getElementById(audioId));
-
-        launchFloatingHearts("💖");
-      } else {
-        document.getElementById("result").innerHTML = 
-          "❌ Incorrect flags. Double-check and try again!";
+      if (stegoCustomizations[pathHash]) {
+        romanticMessage = stegoCustomizations[pathHash].message;
+        motif = stegoCustomizations[pathHash].motif;
+        audioId = stegoCustomizations[pathHash].audioId;
+        launchFallingMotifs(motif);
       }
-    }
 
-    function typeWriter(text, elementId, speed=75) {
-      let i = 0;
-      function typing() {
-        if (i < text.length) {
-          document.getElementById(elementId).innerHTML += text.charAt(i);
-          i++;
-          setTimeout(typing, speed);
-        }
-      }
-      typing();
-    }
+      document.getElementById("result").innerHTML =
+        "<h2 class='heart'>❤️ Congratulations! ❤️</h2>" +
+        "<p>You’ve unlocked the final Valentine message:</p>" +
+        "<h3 id='finalMessage'></h3>" +
+        "<p class='romantic'>" + romanticMessage + "</p>";
 
-    function launchFallingMotifs(symbol) {
-      for (let i = 0; i < 20; i++) {
-        const span = document.createElement("span");
-        span.className = "falling";
-        span.style.left = Math.random() * 100 + "vw";
-        span.style.animationDuration = (3 + Math.random
-                                        </script>
+      typeWriter("💖 You are my ultimate flag 💖", "finalMessage");
+
+      if (audioId) fadeInAudio(document.getElementById(audioId));
+      launchFloatingHearts("💖");
+    } else {
+      document.getElementById("result").innerHTML =
+        "❌ Incorrect flags. Double-check and try again!";
+    }
+  }
+</script>
+
