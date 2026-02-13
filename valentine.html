@@ -113,18 +113,30 @@
   </audio>
 
   <script>
+    // Correct hashes for your four base flags
     const correctHashes = {
-      flag1: "8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f",
-      flag2: "cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23",
-      flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df",
-      flag4: "4884c962b37e9ac79b6766b3fb1d078df7c0a4f6e676b40fff0ab3b75512c00d"
+      flag1: "8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f", // VALENTINE{love_in_plaintext}
+      flag2: "cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23", // VALENTINE{you_accepted}
+      flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df", // VALENTINE{password_success}
+      // For stego, you can accept multiple variants
     };
 
+    // Multiple stego flag hashes mapped to customizations
     const stegoCustomizations = {
-      "4884c962b37e9ac79b6766b3fb1d078df7c0a4f6e676b40fff0ab3b75512c00d": {
+      "6534c38a225caa5284a2217f797a3ed14236d62a3778c7d3d4707bdd441d9c89": {
         message: "🌹 With all the forgetfulness I have been given, I still remember you.",
         motif: "🌹",
         audioId: "music_r0s3"
+      },
+      "06a4b0444ae1e6183e2e344f1dd1159373f6f2168213fe4d729b98d2079a17cc": {
+        message: "🍍 I threw all my dictionaries into the fire and named you my language.",
+        motif: "🍍",
+        audioId: "music_ananas"
+      },
+      "f78b6cb9224209fe21027f4f6addf57ef2fdf4392e9362095ea8de7377f5451e": {
+        message: "🌿 Even if the night sky were filled with stars, I'd rather see them through the reflection of your eyes.",
+        motif: "🌿",
+        audioId: "music_cole"
       }
     };
 
@@ -150,7 +162,7 @@
       if (h1 === correctHashes.flag1 &&
           h2 === correctHashes.flag2 &&
           h3 === correctHashes.flag3 &&
-          h4 === correctHashes.flag4) {
+          stegoCustomizations[h4]) {
         
         let romanticMessage = "💖 You are my ultimate flag 💖";
         let motif = "❤️";
@@ -175,7 +187,6 @@
           fadeInAudio(document.getElementById(audioId));
         }
 
-        // Launch floating hearts for extra romance
         launchFloatingHearts("💖");
       } else {
         document.getElementById("result").innerHTML = 
@@ -198,18 +209,4 @@
     function launchFallingMotifs(symbol) {
       for (let i = 0; i < 20; i++) {
         const span = document.createElement("span");
-        span.className = "falling";
-        span.style.left = Math.random() * 100 + "vw";
-        span.style.animationDuration = (3 + Math.random() * 5) + "s";
-        span.textContent = symbol;
-        document.body.appendChild(span);
-        setTimeout(() => span.remove(), 10000);
-      }
-    }
-
-    function launchFloatingHearts(symbol="💖") {
-      for (let i = 0; i < 15; i++) {
-        const span = document.createElement("span");
-        span.className = "floating";
-        span.style.left = Math.random() * 100 + "vw";
-        span.style.animationDuration = (5 + Math.random() * 5) + "s
+        span.class
