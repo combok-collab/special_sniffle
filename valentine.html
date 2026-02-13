@@ -93,19 +93,21 @@
   </audio>
 
   <script>
-    // Replace with actual SHA-256 hashes of your flags
+    // Correct SHA-256 hashes of your four flags
     const correctHashes = {
-      flag1: "8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f",
-      flag2: "cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23",
-      flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df",
-      flag4: "4884c962b37e9ac79b6766b3fb1d078df7c0a4f6e676b40fff0ab3b75512c00d"
+      flag1: "8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f", // VALENTINE{love_in_plaintext}
+      flag2: "cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23", // VALENTINE{you_accepted}
+      flag3: "0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df", // VALENTINE{password_success}
+      flag4: "4884c962b37e9ac79b6766b3fb1d078df7c0a4f6e676b40fff0ab3b75512c00d"  // VALENTINE{stego_success}
     };
 
-    // Map stego flag hashes to custom romantic messages, motifs, and audio IDs
+    // Use the actual stego flag hash for customization
     const stegoCustomizations = {
-      "6534c38a225caa5284a2217f797a3ed14236d62a3778c7d3d4707bdd441d9c89": { message: "🌹 With all the forgetfullness I have been given, I still remember you.", motif: "🌹", audioId: "music_r0s3" },
-      "06a4b0444ae1e6183e2e344f1dd1159373f6f2168213fe4d729b98d2079a17cc": { message: "🍍 I threw all my dictionaries into the fire and named you my language.", motif: "🍍", audioId: "music_ananas" },
-      "f78b6cb9224209fe21027f4f6addf57ef2fdf4392e9362095ea8de7377f5451e": { message: "🌿 Even if the night sky were filled with stars, I'd rather see them through the reflection of your eyes.", motif: "🌿", audioId: "music_cole" }
+      "4884c962b37e9ac79b6766b3fb1d078df7c0a4f6e676b40fff0ab3b75512c00d": {
+        message: "🌹 With all the forgetfulness I have been given, I still remember you.",
+        motif: "🌹",
+        audioId: "music_r0s3"
+      }
     };
 
     async function sha256(str) {
@@ -127,10 +129,10 @@
       const h3 = await sha256(f3);
       const h4 = await sha256(f4);
 
-      if (h1 === 8e54c0321c6e2f0c71813ac70b170f12a4c6412d2ef838fd6e900bc995c1580f.flag1 &&
-          h2 === cb4dcecadba9ebaa128fd346a88db3fecc22e2763575bbd6eb560f8ac9abfe23.flag2 &&
-          h3 === 0bb092ccb800367230aa7a1e9bd874cb9e2d76b11f9394081a9cd6c4355377df.flag3 &&
-          h4 === 4884c962b37e9ac79b6766b3fb1d078df7c0a4f6e676b40fff0ab3b75512c00d.flag4) {
+      if (h1 === correctHashes.flag1 &&
+          h2 === correctHashes.flag2 &&
+          h3 === correctHashes.flag3 &&
+          h4 === correctHashes.flag4) {
         
         let romanticMessage = "💖 You are my ultimate flag 💖";
         let motif = "❤️";
@@ -151,7 +153,6 @@
 
         typeWriter("💖 You are my ultimate flag 💖", "finalMessage");
 
-        // Play customized romantic track with fade-in
         if (audioId) {
           fadeInAudio(document.getElementById(audioId));
         }
